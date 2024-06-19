@@ -1,7 +1,8 @@
 from rest_framework import generics, exceptions
 
-from project_management.project.models import Project, Task
-from project_management.project.serializers import ProjectSerializer, ProjectCreateSerializer, TaskSerializer, TaskCreateSerializer
+from project_management.project.models import Project, Task, Comment
+from project_management.project.serializers import ProjectSerializer, ProjectCreateSerializer, TaskSerializer, \
+    TaskCreateSerializer, CommentSerializer
 
 
 # Project Views
@@ -51,6 +52,21 @@ class TaskDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
 
     def put(self, request, *args, **kwargs):
-        # Set partial=True to allow partial updates
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
+
+
+# Comment for create and list all comment
+class CommentView(generics.ListAPIView, generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        # Filter comments by the task id from URL parameter
+        task_id = self.kwargs.get('pk')
+        return Comment.objects.filter(task_id=task_id)
+
+    def perform_create(self, serializer):
+        # task instance for the comment based on URL parameter
+        task_id = self.kwargs.get('pk')
+        serializer.save(task_id=task_id)

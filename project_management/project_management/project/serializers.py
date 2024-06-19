@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from project_management.project.models import Project, Task
+from project_management.project.models import Project, Task, Comment
 
 
 # Project Serializers
@@ -37,3 +37,13 @@ class TaskCreateSerializer(serializers.ModelSerializer):
             'status',
             'due_date',
         ]
+
+
+# Comment Serializer for list and create
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = (
+            'task',
+        )

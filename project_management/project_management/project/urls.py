@@ -9,4 +9,6 @@ urlpatterns = [
     # Task Urls
     path('tasks/', views.TaskListViewSet.as_view(), name='task'),
     path('tasks/<int:pk>/', views.TaskDetailUpdateDeleteView.as_view(), name='task_detail_update_delete'),
+    # Comment Urls
+    path('tasks/<int:pk>/comments/', views.CommentView.as_view(), name='task_comments'),
 ]
