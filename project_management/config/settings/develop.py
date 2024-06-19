@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 env = load_dotenv(str(BASE_DIR / ".env"))
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-APPS_DIR = BASE_DIR / "project_managment"
+APPS_DIR = BASE_DIR / "project_management"
 
 DEBUG = True
 

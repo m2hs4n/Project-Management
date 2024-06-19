@@ -22,10 +22,10 @@ services:
       context: .
       dockerfile: ./project_management/compose/production/Dockerfile
 
-    image: project_managment_production_django
+    image: project_management_production_django
     container_name: project_management_production_django_container
     volumes:
-      - production_django_media:/app/project_managment/media
+      - production_django_media:/app/project_management/media
     depends_on:
       - db
     env_file:

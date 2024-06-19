@@ -22,10 +22,10 @@ services:
       context: .
       dockerfile: ./project_management/compose/develop/Dockerfile
 
-    image: project_managment_develop_django
+    image: project_management_develop_django
     container_name: project_management_develop_django_container
     volumes:
-      - develop_django_media:/app/project_managment/media
+      - develop_django_media:/app/project_management/media
       - ./project_management:/app
     depends_on:
       - db

@@ -39,7 +39,7 @@ THIRD_PARTY_APPS = [
 ]
 # Local apps
 LOCAL_APPS = [
-    
+    "project_management.project.apps.ProjectConfig",
 ]
 # Merge all apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
