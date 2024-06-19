@@ -13,3 +13,20 @@ class ProjectAdmin(admin.ModelAdmin):
         'name',
         'description',
     )
+
+
+# Task admin
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'status',
+        'due_date',
+    )
+    search_fields = (
+        'title',
+    )
+    list_filter = (
+        'status',
+        'due_date',
+    )
