@@ -25,7 +25,8 @@ services:
     image: project_managment_develop_django
     container_name: project_management_develop_django_container
     volumes:
-      - develop_django_media:/app/prject_managment/media
+      - develop_django_media:/app/project_managment/media
+      - ./project_management:/app
     depends_on:
       - db
     env_file:

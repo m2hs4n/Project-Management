@@ -25,7 +25,7 @@ services:
     image: project_managment_production_django
     container_name: project_management_production_django_container
     volumes:
-      - production_django_media:/app/prject_managment/media
+      - production_django_media:/app/project_managment/media
     depends_on:
       - db
     env_file:
