@@ -21,6 +21,13 @@ class ProjectDetailUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+    lookup_field = 'pk'
+
+    def put(self, request, *args, **kwargs):
+        # Set partial=True to allow partial updates
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
 
 # Task View
 # List all tasks
