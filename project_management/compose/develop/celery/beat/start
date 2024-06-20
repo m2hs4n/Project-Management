@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+celery -A config beat --loglevel=info

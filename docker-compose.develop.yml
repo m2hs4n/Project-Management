@@ -3,11 +3,13 @@ volumes:
   develop_postgres_data_backups: {}
   develop_django_media: {}  
 
+  project_managment_develop_redis_data: {}
+
 
 services:
   db:
     container_name: develop_postgres_db
-    image: postgres:latest
+    image: postgres:16
     volumes:
       - develop_postgres_data:/var/lib/postgresql/data
       - develop_postgres_data_backups:/backups
@@ -16,8 +18,15 @@ services:
     ports:
       - 5432:5432
 
-  
-  django:
+
+  redis:
+    container_name: redis
+    image: redis:7
+    ports:
+      - 6379:6379
+
+
+  django: &django
     build:
       context: .
       dockerfile: ./project_management/compose/develop/Dockerfile
@@ -29,8 +38,46 @@ services:
       - ./project_management:/app
     depends_on:
       - db
+      - redis
     env_file:
       - ./project_management/.envs/.develop/.env
     ports:
       - 8000:8000
     
+
+  celeryworker:
+    <<: *django
+    image: project_managment_develop_celeryworker
+    container_name: project_managment_develop_celeryworker
+    depends_on:
+      - db
+      - redis
+      - django
+    ports: []
+    command: /start-celery-worker
+
+
+  celerybeat:
+    <<: *django
+    image: project_managment_develop_celerybeat
+    container_name: project_managment_develop_celerybeat
+    depends_on:
+      - celeryworker
+      - redis
+      - db
+      - django
+    ports: []
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: project_managment_develop_flower
+    container_name: project_managment_develop_flower
+    depends_on:
+      - celeryworker
+      - celerybeat
+      - redis
+      - django
+    ports:
+      - 5555:5555
+    command: /start-flower

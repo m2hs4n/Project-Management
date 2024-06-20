@@ -21,6 +21,18 @@ RUN pip install -r production.txt
 # Copy project
 COPY project_management /app/
 
+# Copy and set permission for running celery worker
+COPY ./project_management/compose/develop/celery/worker/start /start-celery-worker
+RUN chmod +x /start-celery-worker
+
+# Copy and set permission for running celery beat
+COPY ./project_management/compose/develop/celery/worker/start /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+# Copy and set permission for running celery flower
+COPY ./project_management/compose/develop/celery/worker/start /start-flower
+RUN chmod +x /start-flower
+
 # Add a user for security purposes
 RUN adduser --disabled-password django-user
 RUN chown -R django-user:django-user /app
