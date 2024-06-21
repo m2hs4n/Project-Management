@@ -26,6 +26,14 @@ services:
       - 6379:6379
 
 
+  rabbitmq:
+    container_name: rabbitmq_develop_container
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+
   django: &django
     build:
       context: .
@@ -39,6 +47,7 @@ services:
     depends_on:
       - db
       - redis
+      - rabbitmq
     env_file:
       - ./project_management/.envs/.develop/.env
     ports:
