@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.10-slim
+FROM python:3.12.4-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -23,11 +23,11 @@ COPY ./project_management/compose/develop/celery/worker/start /start-celery-work
 RUN chmod +x /start-celery-worker
 
 # Copy and set permission for running celery beat
-COPY ./project_management/compose/develop/celery/worker/start /start-celerybeat
+COPY ./project_management/compose/develop/celery/beat/start /start-celerybeat
 RUN chmod +x /start-celerybeat
 
 # Copy and set permission for running celery flower
-COPY ./project_management/compose/develop/celery/worker/start /start-flower
+COPY ./project_management/compose/develop/celery/flower/start /start-flower
 RUN chmod +x /start-flower
 
 # Add a user for security purposes
