@@ -22,15 +22,15 @@ RUN pip install -r production.txt
 COPY project_management /app/
 
 # Copy and set permission for running celery worker
-COPY ./project_management/compose/develop/celery/worker/start /start-celery-worker
+COPY ./project_management/compose/production/celery/worker/start /start-celery-worker
 RUN chmod +x /start-celery-worker
 
 # Copy and set permission for running celery beat
-COPY ./project_management/compose/develop/celery/beat/start /start-celerybeat
+COPY ./project_management/compose/production/celery/beat/start /start-celerybeat
 RUN chmod +x /start-celerybeat
 
 # Copy and set permission for running celery flower
-COPY ./project_management/compose/develop/celery/flower/start /start-flower
+COPY ./project_management/compose/production/celery/flower/start /start-flower
 RUN chmod +x /start-flower
 
 # Add a user for security purposes
