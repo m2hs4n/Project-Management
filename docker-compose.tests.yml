@@ -1,0 +1,52 @@
+volumes:
+  develop_postgres_data_test: {}
+  develop_postgres_data_backups_test: {}
+  develop_django_media_test: {}
+
+
+services:
+  db:
+    container_name: develop_postgres_db_test
+    image: postgres:16
+    volumes:
+      - develop_postgres_data_test:/var/lib/postgresql/data
+      - develop_postgres_data_backups_test:/backups
+    env_file:
+      - ./project_management/.envs/.develop/.env
+    ports:
+      - 5432:5432
+
+  redis:
+    container_name: redis
+    image: redis:7
+    ports:
+      - 6379:6379
+
+  django: &django
+    build:
+      context: .
+      dockerfile: ./project_management/compose/production/Dockerfile
+
+    image: project_management_develop_django
+    container_name: project_management_test_django_container
+    volumes:
+      - develop_django_media_test:/app/project_management/media
+      - ./project_management:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ./project_management/.envs/.production/.env
+    ports:
+      - 8000:8000
+  
+  test:
+    <<: *django
+    image: project_managment_tests
+    container_name: project_managment_tests
+    depends_on:
+      - db
+      - django
+      - redis
+    ports: []
+    command: /start-test

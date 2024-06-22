@@ -33,6 +33,10 @@ RUN chmod +x /start-celerybeat
 COPY ./project_management/compose/production/celery/flower/start /start-flower
 RUN chmod +x /start-flower
 
+# Copy and set permission for running celery flower
+COPY ./project_management/compose/production/test/start /start-test
+RUN chmod +x /start-test
+
 # Add a user for security purposes
 RUN adduser --disabled-password django-user
 RUN chown -R django-user:django-user /app
