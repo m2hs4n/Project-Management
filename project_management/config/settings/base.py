@@ -27,6 +27,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'project_management.project.tasks.check_tasks',
         'schedule': crontab(hour=6, minute=0),
     },
+    'summary_report_task': {
+        'task': 'project_management.project.tasks.summary_report_task',
+        'schedule': crontab("*/1"),
+    },
 }
 
 # Application definition

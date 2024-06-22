@@ -22,9 +22,13 @@ COPY send_email /app/
 COPY ./send_email/compose/develop/celery/worker/start /start-celery-worker
 RUN chmod +x /start-celery-worker
 
-# Copy and set permission for running RabbitMQ consumer
-COPY ./send_email/compose/develop/consumer/start /start-consumer
-RUN chmod +x /start-consumer
+# Copy and set permission for running RabbitMQ consumer task
+COPY ./send_email/compose/develop/consumer/start_summery /start-consumer-task
+RUN chmod +x /start-consumer-task
+
+# Copy and set permission for running RabbitMQ consumer summery
+COPY ./send_email/compose/develop/consumer/start_summery /start-consumer-summery
+RUN chmod +x /start-consumer-summery
 
 # Copy and set permission for running celery flower
 COPY ./send_email/compose/develop/celery/flower/start /start-flower

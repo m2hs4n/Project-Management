@@ -123,10 +123,10 @@ services:
     command: /start-celery-worker
 
 
-  consumer:
+  consumer_task:
     <<: *send_email
-    image: project_managment_develop_consumer
-    container_name: project_managment_develop_consumer
+    image: send_email_develop_consumer_task
+    container_name: send_email_develop_consumer_task_container
     restart: always
     depends_on:
       - send_email_celeryworker
@@ -135,7 +135,21 @@ services:
       - send_email
       - rabbitmq
     ports: []
-    command: /start-consumer
+    command: /start-consumer-task
+
+  consumer_summery:
+    <<: *send_email
+    image: send_email_develop_consumer_summery
+    container_name: send_email_develop_consumer_summery_container
+    restart: always
+    depends_on:
+      - send_email_celeryworker
+      - redis
+      - db
+      - send_email
+      - rabbitmq
+    ports: []
+    command: /start-consumer-summery
 
   send_email_flower:
     <<: *send_email

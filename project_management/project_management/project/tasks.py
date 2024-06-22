@@ -6,7 +6,10 @@ import datetime
 
 from celery import shared_task
 
-from project_management.project.models import Task
+from django.db.models import Count, Case, When, Value, CharField
+
+from project_management.project.models import Task, Project
+
 
 
 @shared_task
@@ -38,4 +41,37 @@ def check_tasks():
             "due_date": str(task.due_date),
         })
         channel.basic_publish(exchange='', routing_key='tasks_send_email_queue', body=body)
+    connection.close()
+
+
+@shared_task
+def summary_report_task():
+    """
+        Generate a summary report of tasks for each project.
+        
+        This function creates a queryset that annotates each Project instance with 
+        the total number of tasks and the counts of tasks in various statuses (Pending, 
+        In Progress, and Completed).
+    """
+
+    summary = Project.objects.annotate(
+    total_tasks=Count('tasks'),
+    pending_tasks=Count(Case(When(tasks__status='PE', then=1), output_field=CharField())),
+    in_progress_tasks=Count(Case(When(tasks__status='IN', then=1), output_field=CharField())),
+    completed_tasks=Count(Case(When(tasks__status='CO', then=1), output_field=CharField()))
+    )
+
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+    channel = connection.channel()
+    channel.queue_declare(queue='tasks_send_email_summery_report_queue')
+    for project in summary:
+        body = json.dumps({
+            "email": "test@gmail.com",
+            "project": str(project.name),
+            "total tasks": str(project.total_tasks),
+            "pending tasks": str(project.pending_tasks),
+            "in progress tasks": str(project.in_progress_tasks),
+            "completed tasks": str(project.completed_tasks),
+        })
+        channel.basic_publish(exchange='', routing_key='tasks_send_email_summery_report_queue', body=body)
     connection.close()
