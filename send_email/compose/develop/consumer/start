@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+python send_email/sender/consumer.py

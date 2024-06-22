@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+celery -A config flower --port=8081

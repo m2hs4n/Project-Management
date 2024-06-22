@@ -88,5 +88,64 @@ services:
       - redis
       - django
     ports:
-      - 5555:5555
+      - 8080:8080
+    command: /start-flower
+
+
+  send_email: &send_email
+    build:
+      context: .
+      dockerfile: ./send_email/compose/develop/Dockerfile
+
+    image: send_email_develop_django
+    container_name: send_email_develop_django_container
+    volumes:
+      - ./send_email:/app
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    env_file:
+      - ./send_email/.envs/.develop/.env
+    ports:
+      - 8002:8002
+  
+  send_email_celeryworker:
+    <<: *send_email
+    image: project_managment_develop_send_email_celeryworker
+    container_name: project_managment_develop_send_email_celeryworker
+    depends_on:
+      - db
+      - redis
+      - send_email
+      - rabbitmq
+    ports: []
+    command: /start-celery-worker
+
+
+  consumer:
+    <<: *send_email
+    image: project_managment_develop_consumer
+    container_name: project_managment_develop_consumer
+    restart: always
+    depends_on:
+      - send_email_celeryworker
+      - redis
+      - db
+      - send_email
+      - rabbitmq
+    ports: []
+    command: /start-consumer
+
+  send_email_flower:
+    <<: *send_email
+    image: project_managment_develop_send_email_flower
+    container_name: project_managment_develop_send_email_flower
+    depends_on:
+      - send_email_celeryworker
+      - redis
+      - send_email
+      - rabbitmq
+    ports:
+      - 8081:8081
     command: /start-flower

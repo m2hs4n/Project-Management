@@ -29,7 +29,7 @@ def check_tasks():
     tasks = Task.objects.filter(status=Task.Status.PENDING, due_date=tomorrow)
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
-    channel.queue_declare(queue='tasks_send_email_queue', durable=True)
+    channel.queue_declare(queue='tasks_send_email_queue')
     for task in tasks:
         body = json.dumps({
             "email": "test@gmail.com",
