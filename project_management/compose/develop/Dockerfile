@@ -35,6 +35,8 @@ RUN adduser --disabled-password django-user
 RUN chown -R django-user:django-user /app
 USER django-user
 
+RUN sh -c python manage.py createcachetable
+
 # Expose the port the app runs on
 EXPOSE 8000
 
