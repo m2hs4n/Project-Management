@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-celery -A config flower --port=5555
+celery -A config flower --port=8080
