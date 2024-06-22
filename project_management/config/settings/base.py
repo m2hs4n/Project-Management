@@ -43,6 +43,8 @@ DJANGO_APPS = [
 ]
 # Application third party
 THIRD_PARTY_APPS = [
+    "daphne",
+    "channels",
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
@@ -54,9 +56,10 @@ THIRD_PARTY_APPS = [
 # Local apps
 LOCAL_APPS = [
     "project_management.project.apps.ProjectConfig",
+    "project_management.websocket.apps.WebsocketConfig",
 ]
 # Merge all apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 # Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,7 +92,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = "config.asgi.application"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
